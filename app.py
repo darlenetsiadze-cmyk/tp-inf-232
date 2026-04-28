@@ -35,4 +35,86 @@ with tab1:
         with col2:
             poids = st.number_input("Poids (kg)", 1.0, 250.0, 70.0)
             taille = st.number_input("Taille (m)", 0.5, 2.5, 1.75)
-            glycemie = st.number_input("Glycémie (
+            glycemie = st.number_input("Glycémie (g/L)", 0.1, 8.0, 1.0)
+        
+        tension = st.slider("Pression Artérielle (mmHg)", 50, 200, 120)
+        
+        submit = st.form_submit_button("Valider et Enregistrer")
+
+        if submit:
+            if nom:
+                imc = round(poids / (taille ** 2), 2)
+                # Création du dictionnaire de données (Les noms ici doivent être dans le CSV)
+                nouveau = pd.DataFrame([{
+                    "Nom": nom, 
+                    "Age": age, 
+                    "Genre": genre, 
+                    "Glycemie": glycemie, 
+                    "IMC": imc, 
+                    "Tension": tension
+                }])
+                
+                # Sauvegarde
+                if not os.path.isfile(DB_FILE):
+                    nouveau.to_csv(DB_FILE, index=False)
+                else:
+                    nouveau.to_csv(DB_FILE, mode='a', header=False, index=False)
+                st.success(f"✅ Données enregistrées pour {nom}")
+            else:
+                st.error("⚠️ L'identifiant est obligatoire !")
+
+# --- ONGLET 2 : ANALYSE DESCRIPTIVE ---
+with tab2:
+    st.header("Tableau de Bord Statistique")
+    
+    if os.path.isfile(DB_FILE):
+        df = pd.read_csv(DB_FILE)
+        
+        # Petit résumé (Metrics)
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Total Patients", len(df))
+        c2.metric("Moyenne Glycémie", f"{df['Glycemie'].mean():.2f} g/L")
+        c3.metric("Moyenne IMC", f"{df['IMC'].mean():.2f}")
+
+        st.divider()
+
+        # GRAPHE 1 : RÉPARTITION PAR GENRE
+        st.subheader("1. Répartition par Genre")
+        fig1 = px.pie(df, names='Genre', hole=0.4)
+        st.plotly_chart(fig1, use_container_width=True)
+        st.info("📌 **Explication :** Ce graphique montre l'équilibre hommes/femmes de notre base de données.")
+
+        # GRAPHE 2 : RELATION AGE VS GLYCEMIE (Corrigé sans l'erreur 'ID')
+        st.subheader("2. Relation Age vs Glycémie")
+        fig2 = px.scatter(
+            df, 
+            x="Age", 
+            y="Glycemie", 
+            color="Genre",
+            hover_name="Nom", # On utilise "Nom" car "ID" n'existe pas
+            title="Analyse de la Glycémie par âge"
+        )
+        st.plotly_chart(fig2, use_container_width=True)
+        st.info("📌 **Explication :** Ce nuage de points permet de voir si le taux de sucre augmente avec l'âge.")
+
+        # GRAPHE 3 : CORRÉLATION IMC / GLYCÉMIE
+        st.subheader("3. Corrélation IMC vs Glycémie")
+        fig3 = px.scatter(df, x="IMC", y="Glycemie", color="Genre", trendline="ols")
+        st.plotly_chart(fig3, use_container_width=True)
+        st.info("📌 **Explication :** Ce graphique vérifie si un IMC élevé est un facteur de risque pour le diabète.")
+
+        st.divider()
+        st.write("### Aperçu de la base de données")
+        st.dataframe(df, use_container_width=True)
+        
+        # Bouton de téléchargement
+        csv = df.to_csv(index=False).encode('utf-8')
+        st.download_button("📥 Télécharger la base complète", data=csv, file_name='donnees_diabete.csv', mime='text/csv')
+    else:
+        st.warning("⚠️ Aucune donnée disponible. Veuillez remplir le formulaire.")
+
+# --- ONGLET 3 : NOTE CONCEPTUELLE ---
+with tab3:
+    st.header("Note Conceptuelle")
+    st.write("Ce projet vise à automatiser la surveillance du diabète.")
+    st.write("**Développeur :** TSIADZE DONFACK DARLENE")
