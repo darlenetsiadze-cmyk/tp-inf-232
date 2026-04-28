@@ -115,6 +115,16 @@ with tab2:
 
 # --- ONGLET 3 : NOTE CONCEPTUELLE ---
 with tab3:
-    st.header("Note Conceptuelle")
-    st.write("Ce projet vise à automatiser la surveillance du diabète.")
-    st.write("**Développeur :** TSIADZE DONFACK DARLENE")
+    st.header("💡 Note Technique & Conceptuelle")
+    st.markdown(f"""
+    ### 🎯 Contexte du Projet
+    Cette application répond aux exigences du **TP INF 232 EC2 (Analyse de Données)**. Elle se concentre sur le secteur de la **Santé Publique**, spécifiquement le suivi du diabète en milieu universitaire.
+
+    ### 🛠️ Choix Techniques (Qualités de l'application) :
+    1.  **Créativité :** Intégration d'un calculateur d'IMC automatique et d'une analyse bivariée en temps réel.
+    2.  **Robustesse :** Persistance des données via CSV et gestion automatique des tris.
+    3.  **Efficacité :** Interface simplifiée permettant une saisie rapide et une visualisation immédiate.
+    4.  **Fiabilité :** Algorithmes de calcul basés sur les standards de l'OMS (Organisation Mondiale de la Santé).
+
+    **Étudiante :** TSIADZE DONFACK DARLENE| **Niveau :** L2 Informatique (Ngoa-Ekélé)
+    """)
