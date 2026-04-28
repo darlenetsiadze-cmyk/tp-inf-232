@@ -99,7 +99,7 @@ with tab2:
 
         # GRAPHE 3 : CORRÉLATION IMC / GLYCÉMIE
         st.subheader("3. Corrélation IMC vs Glycémie")
-        fig3 = px.scatter(df, x="IMC", y="Glycemie", color="Genre", trendline="ols")
+        fig3 = px.scatter(df, x="IMC", y="Glycemie", color="Genre")
         st.plotly_chart(fig3, use_container_width=True)
         st.info("📌 **Explication :** Ce graphique vérifie si un IMC élevé est un facteur de risque pour le diabète.")
 
